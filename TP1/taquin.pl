@@ -199,12 +199,19 @@ heuristique(U,H) :-
 	% et les compte (voir prédicat length)
 
    coordonnees(Piece, Etat, Lig, Col) :-
-      nth1(L,Etat,Lig), 
-      nth1(Col,Lig, Piece).
+      nth1(Lig,Etat,L), 
+      nth1(Col,L, Piece).
+
+   malplace(P,U,F) :-
+      coordonnees(P,U,L,C),
+      coordonnees(Q,F,L,C),
+      P \= Q,
+      P \= vide.
    
-   heuristique1(U, H) :- true.     %********
-                                    % A FAIRE
-                                    %********
+   heuristique1(U, H) :- 
+      findall(P,(final_state(F),malplace(P,U,F)),Liste_mal_place),
+      length(Liste_mal_place,H).
+
    
    
    %****************
