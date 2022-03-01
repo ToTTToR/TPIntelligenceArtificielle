@@ -197,8 +197,12 @@ heuristique(U,H) :-
    
     % Definir enfin l'heuristique qui détermine toutes les pièces mal placées (voir prédicat findall) 
 	% et les compte (voir prédicat length)
+
+   coordonnees(Piece, Etat, Lig, Col) :-
+      nth1(L,Etat,Lig), 
+      nth1(Col,Lig, Piece).
    
-    heuristique1(U, H) :- true.     %********
+   heuristique1(U, H) :- true.     %********
                                     % A FAIRE
                                     %********
    
