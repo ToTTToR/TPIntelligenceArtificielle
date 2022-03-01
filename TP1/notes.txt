@@ -7,3 +7,14 @@
     f) findall([A,S],(initial_state(Ini), rule(A,1,Ini,S)),Couples).
 
 2. Développement des 2 heuristiques.
+
+
+
+
+
+Tests unitaire :
+    -Manhattan : initial_state(Ini),manhattan(h,Ini,H).
+    -Heuristique1 : initial_state(Ini),heuristique1(Ini,H).
+    -malplace : initial_state(Ini),final_state(Final),malplace(X,Ini,Final).
+    -coordonnees : initial_state(Ini),coordonnees(a,Ini,L,C).
+    -heuristique2 : initial_state(Ini),heuristique2(Ini,H).
