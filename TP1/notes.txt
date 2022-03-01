@@ -1,0 +1,9 @@
+1.2 a) La clause final_state([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,vide]]) représente la situation finale du Taquin 4x4
+    b) Retourne pour la première clause les indexes de l'élément d (ligne et colonne) de l'état initial.
+       Deuxième clause : retourne l'élément se trouvant aux indexes ligne=2 et colonne=3.
+    c) initial_state(Ini), nth1(L,Ini,Ligne), nth1(C,Ligne, P), final_state(Fin), nth1(L,Fin,Ligne2), nth1(C,Ligne2,P).
+    d) (initial_state(Ini), rule(R,1,Ini,Next_State)).
+    e) findall(X,(initial_state(Ini), rule(R,1,Ini,X)),States).
+    f) findall([A,S],(initial_state(Ini), rule(A,1,Ini,S)),Couples).
+
+2. Développement des 2 heuristiques.
