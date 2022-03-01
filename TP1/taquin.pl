@@ -181,42 +181,59 @@ heuristique(U,H) :-
 %   heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
    
    
-   %****************
-   %HEURISTIQUE no 1
-   %****************
-   % Nombre de pieces mal placees dans l'etat courant U
-   % par rapport a l'etat final F
-   
-   
-   % Suggestions : définir d'abord le prédicat coordonnees(Piece,Etat,Lig,Col) qui associe à une pièce présente dans Etat
-   % ses coordonnees (Lig= numero de ligne, Col= numero de Colonne)
-   
-   % Definir ensuite le predicat malplace(P,U,F) qui est vrai si les coordonnes de P dans U et dans F sont differentes.
-   % On peut également comparer les pieces qui se trouvent aux mêmes coordonnees dans U et dans H et voir s'il sagit de la
-   % même piece.
-   
-    % Definir enfin l'heuristique qui détermine toutes les pièces mal placées (voir prédicat findall) 
-	% et les compte (voir prédicat length)
+%****************
+%HEURISTIQUE no 1
+%****************
+% Nombre de pieces mal placees dans l'etat courant U
+% par rapport a l'etat final F
 
-   coordonnees(Piece, Etat, Lig, Col) :-
-      nth1(L,Etat,Lig), 
-      nth1(Col,Lig, Piece).
-   
-   heuristique1(U, H) :- true.     %********
-                                    % A FAIRE
-                                    %********
-   
-   
-   %****************
-   %HEURISTIQUE no 2
-   %****************
-   
-   % Somme des distances de Manhattan à parcourir par chaque piece
-   % entre sa position courante et sa positon dans l'etat final
 
-   
-    heuristique2(U, H) :- true.     %********
-                                    % A FAIRE
-                                    %********
+% Suggestions : définir d'abord le prédicat coordonnees(Piece,Etat,Lig,Col) qui associe à une pièce présente dans Etat
+% ses coordonnees (Lig= numero de ligne, Col= numero de Colonne)
+
+% Definir ensuite le predicat malplace(P,U,F) qui est vrai si les coordonnes de P dans U et dans F sont differentes.
+% On peut également comparer les pieces qui se trouvent aux mêmes coordonnees dans U et dans H et voir s'il sagit de la
+% même piece.
+
+   % Definir enfin l'heuristique qui détermine toutes les pièces mal placées (voir prédicat findall) 
+% et les compte (voir prédicat length)
+
+coordonnees(Piece, Etat, Lig, Col) :-
+   nth1(Lig,Etat,L), 
+   nth1(Col,L, Piece).
+
+malplace(P,U,F) :-
+   coordonnees(P,U,L,C),
+   coordonnees(Q,F,L,C),
+   P \= Q,
+   P \= vide.
+
+heuristique1(U, H) :- 
+   findall(P,(final_state(F),malplace(P,U,F)),Liste_mal_place),
+   length(Liste_mal_place,H).
+
+
+
+%****************
+%HEURISTIQUE no 2
+%****************
+
+% Somme des distances de Manhattan à parcourir par chaque piece
+% entre sa position courante et sa positon dans l'etat final
+sumlist([H|T],N) :- 
+   sumlist(T,N1),
+   N is (H+N1).
+sumlist([],0).
+
+manhattan(P,U,M) :-
+   final_state(F),
+   coordonnees(P,U,L1,C1),
+   coordonnees(P,F,L2,C2),
+   P \= vide,
+   M is (abs(L1-L2) + abs(C1-C2)).
+
+heuristique2(U, H) :- 
+   findall(M,manhattan(P,U,M),List2),
+   sumlist(List2,H).
 									
 									
