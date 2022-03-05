@@ -73,33 +73,33 @@ aetoile(Empty,Empty,_) :-
 	empty(Empty),
 	writeln("Pas de solution : l'état final n'est pas ateignable.").
 
-aetoile(Pf, _, _) :-
-	suppress_min([_,F],Pf,_),
-	final_state(F),
-	!,
-	writeln(F),
-	writeln("On a trouvé la solution!!!!! Youpi!!!!").
-
 aetoile(Pf,Pu,Qs) :-
 	suppress_min([[_,_,G],U],Pf,Pf2),
 	suppress([U,Info,Pere,A],Pu,Pu2),
 	writeln(U),
 	findall([U2,Cost,Move],rule(Move,Cost,U,U2),List_successors),
 	expand(U,List_successors,G,[Qs,Q2],[Pf2,Pf3],[Pu2,Pu3]),
+	writeln("expand over"),
 	insert([U,Info,Pere,A],Q2,Q3),
 	aetoile(Pf3,Pu3,Q3).
 
-expand(_,[],_,_,_).
+aetoile(Pf,_,_) :-
+	suppress_min([_,F],Pf,_),
+	final_state(F),
+	writeln(F),
+	writeln("On a trouvé la solution!!!!! Youpi!!!!").
+
+expand(_,[],_,_,_,_).
 
 expand(Ancetre,[[U,Cost,Move]|T],G,[Q,Q3],[Pf,Pf3],[Pu,Pu3]) :-
 	heuristique(U,H),
 	G2 is (Cost + G),
 	F is (H+G2),
 	loop_successors(Ancetre,[U,Cost,Move],[Q,Q2],[Pf,Pf2],[Pu,Pu2],[F,G2,H]),
+	writeln("expanding"),
+	writeln(Pf),
+	writeln(Pf3),
 	expand(Ancetre,T,G,[Q2,Q3],[Pf2,Pf3],[Pu2,Pu3]).
-
-
-loop_successors(_,_,[Q,_],_,_,_) :- suppress([U,_,_,_],Q,_).
 
 loop_successors(_,_,_,_,[Pu,Pu3],[F1,_,_]) :-
 	suppress([U,[F2,H2,G2],Pere,A],Pu,Pu2),
@@ -116,3 +116,5 @@ loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu,Pu3),
 	insert([[F1,H1,G1],U],Pf,Pf3).
+
+loop_successors(_,[U,_,_],[Q,_],_,_,_) :- suppress([U,_,_,_],Q,_).
