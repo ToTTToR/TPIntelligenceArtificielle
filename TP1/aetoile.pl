@@ -85,10 +85,13 @@ aetoile(Pf,Pu,Qs) :-
 	insert([U,Info,Pere,A],Q2,Q3),
 	aetoile(Pf3,Pu3,Q3).
 
-aetoile(Pf,_,_) :-
+aetoile(Pf,_,Qs) :-
 	final_state(F),
 	suppress_min([_,F],Pf,_),
-	writeln(F),
+	writeln(""),
+	writeln("Solution finale :"),
+	get_solution(F, Qs,L),
+	reverse(L,L2,[]),
 	writeln("On a trouvé la solution!!!!! Youpi!!!!"),
 	!.
 
@@ -129,3 +132,20 @@ loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :-
 	belongs([U,_,_,_],Q),
 	writeln("S is in Q").
+
+affiche_solution(_,_,[]).
+affiche_solution(U,Q,[[U,Move]|T]):-
+	writeln("Mouvement :"),
+	write(Move),
+	write(", Etat :"),
+	write(U),
+	affiche_solution(U,Q,T).
+
+get_solution(Empty, _, []) :- empty(Empty).
+get_solution(U, Q, [[U,Move] | T]) :-
+	belongs([U, _, _, _], Q),
+	suppress([U, _, Ancetre, Move], Q, Q2),
+	affiche_solution(Ancetre, Q2, Move).
+
+reverse([],L,L).
+reverse([H|T],L,Acc) :- reverse(T,L,[H|Acc]).
