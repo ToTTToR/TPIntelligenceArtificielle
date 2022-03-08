@@ -86,10 +86,11 @@ aetoile(Pf,Pu,Qs) :-
 	aetoile(Pf3,Pu3,Q3).
 
 aetoile(Pf,_,_) :-
-	suppress_min([_,F],Pf,_),
 	final_state(F),
+	suppress_min([_,F],Pf,_),
 	writeln(F),
-	writeln("On a trouvé la solution!!!!! Youpi!!!!").
+	writeln("On a trouvé la solution!!!!! Youpi!!!!"),
+	!.
 
 expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]) :- writeln("Fin de la liste de successeurs.").
 
