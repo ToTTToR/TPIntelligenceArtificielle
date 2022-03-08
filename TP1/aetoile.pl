@@ -78,6 +78,8 @@ aetoile(Pf,Pu,Qs) :-
 	suppress([U,Info,Pere,A],Pu,Pu2),
 	writeln(U),
 	findall([U2,Cost,Move],rule(Move,Cost,U,U2),List_successors),
+	write("List of successors = "),
+	writeln(List_successors),
 	expand(U,List_successors,G,[Qs,Q2],[Pf2,Pf3],[Pu2,Pu3]),
 	writeln("expand over"),
 	insert([U,Info,Pere,A],Q2,Q3),
@@ -98,22 +100,33 @@ expand(Ancetre,[[U,Cost,Move]|T],G,[Q,Q3],[Pf,Pf3],[Pu,Pu3]) :-
 	F is (H+G2),
 	loop_successors(Ancetre,[U,Cost,Move],[Q,Q2],[Pf,Pf2],[Pu,Pu2],[F,G2,H]),
 	writeln("expanding"),
+	write("Pf = "),
+	writeln(Pf),
+	write("Pf2 = "),
+	writeln(Pf2),
+	writeln(""),
 	expand(Ancetre,T,G,[Q2,Q3],[Pf2,Pf3],[Pu2,Pu3]).
 
-loop_successors(_,_,_,_,[Pu,Pu3],[F1,_,_]) :-
+loop_successors(_,[U|_],_,_,[Pu,Pu3],[F1,_,_]) :-
 	suppress([U,[F2,H2,G2],Pere,A],Pu,Pu2),
 	compare(>,F1,F2),
-	insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3).
+	writeln("Loop successors 1"),
+	insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3),
+	write("Renvoie : "),
+	writeln(Pu3).
 
 loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 	suppress([U,[F2,H2,G2],_,_],Pu,Pu2),
 	compare(>,F2,F1),
+	writeln("Loop successors 2"),
 	suppress([[F2,H2,G2],U],Pf,Pf2),
 	insert([[F1,H1,G1],U],Pf2,Pf3),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu2,Pu3).
 
 loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+	writeln("Loop successors 3"),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu,Pu3),
-	insert([[F1,H1,G1],U],Pf,Pf3).
+	insert([[F1,H1,G1],U],Pf,Pf3),
+	writeln(Pu3).
 
 loop_successors(_,[U,_,_],[Q,_],_,_,_) :- belongs([U,_,_,_],Q).
