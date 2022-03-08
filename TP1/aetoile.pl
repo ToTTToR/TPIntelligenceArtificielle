@@ -93,7 +93,7 @@ aetoile(Pf,_,Qs) :-
 	get_solution(F, Qs,L),
 	reverse(L,L2,[]),
 	writeln("On a trouvé la solution!!!!! Youpi!!!!"),
-	write(Q),
+	affiche_solution(F,Qs,L),
 	!.
 
 expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]) :- writeln("Fin de la liste de successeurs.").
@@ -145,8 +145,7 @@ affiche_solution(U,Q,[[U,Move]|T]):-
 get_solution(Empty, _, []) :- empty(Empty).
 get_solution(U, Q, [[U,Move] | T]) :-
 	belongs([U, _, _, _], Q),
-	suppress([U, _, Ancetre, Move], Q, Q2),
-	affiche_solution(Ancetre, Q2, Move).
+	suppress([U, _, Ancetre, Move], Q, Q2).
 
 reverse([],L,L).
 reverse([H|T],L,Acc) :- reverse(T,L,[H|Acc]).
