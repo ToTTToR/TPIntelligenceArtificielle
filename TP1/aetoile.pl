@@ -91,43 +91,40 @@ aetoile(Pf,_,_) :-
 	writeln(F),
 	writeln("On a trouvé la solution!!!!! Youpi!!!!").
 
-expand(_,[],_,_,_,_).
+expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]) :- writeln("Fin de la liste de successeurs.").
 
 expand(Ancetre,[[U,Cost,Move]|T],G,[Q,Q3],[Pf,Pf3],[Pu,Pu3]) :-
 	heuristique(U,H),
 	G2 is (Cost + G),
 	F is (H+G2),
+	writeln(""),
+	writeln("Accès à un successeur"),
 	loop_successors(Ancetre,[U,Cost,Move],[Q,Q2],[Pf,Pf2],[Pu,Pu2],[F,G2,H]),
 	writeln("expanding"),
-	write("Pf = "),
-	writeln(Pf),
-	write("Pf2 = "),
-	writeln(Pf2),
-	writeln(""),
 	expand(Ancetre,T,G,[Q2,Q3],[Pf2,Pf3],[Pu2,Pu3]).
 
-loop_successors(_,[U|_],_,_,[Pu,Pu3],[F1,_,_]) :-
+loop_successors(_,[U|_],[Q,Q],[Pf,Pf],[Pu,Pu3],[F1,_,_]) :-
 	suppress([U,[F2,H2,G2],Pere,A],Pu,Pu2),
 	compare(>,F1,F2),
-	writeln("Loop successors 1"),
+	writeln("S est connu dans Pu, mais S à une évaluation moins bonne."),
 	insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3),
 	write("Renvoie : "),
 	writeln(Pu3).
 
-loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 	suppress([U,[F2,H2,G2],_,_],Pu,Pu2),
 	compare(>,F2,F1),
-	writeln("Loop successors 2"),
+	writeln("S est connu dans Pu, et S a une évaluation meilleure."),
 	suppress([[F2,H2,G2],U],Pf,Pf2),
 	insert([[F1,H1,G1],U],Pf2,Pf3),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu2,Pu3).
 
-loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
-	writeln("Loop successors 3"),
+loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+	writeln("S est une situation nouvelle."),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu,Pu3),
 	insert([[F1,H1,G1],U],Pf,Pf3),
 	writeln(Pu3).
 
-loop_successors(_,[U,_,_],[Q,_],_,_,_) :-
-	suppress([U,_,_,_],Q,_),
-	writeln("Supress in Q").
+loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :-
+	belongs([U,_,_,_],Q),
+	writeln("S is in Q").
