@@ -89,7 +89,9 @@ aetoile(Pf,_,Qs) :-
 	final_state(F),
 	suppress_min([_,F],Pf,_),
 	writeln("On a trouvé la solution!!!!! Youpi!!!!"),
-	affiche_solution(F,Qs,L),
+	get_solution(F,Qs,L),
+	reverse(L,Sol,[]),
+	affiche_solution(Sol),
 	!.
 
 expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]) :- writeln("Fin de la liste de successeurs.").
@@ -129,22 +131,20 @@ loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :-
 	belongs([U,_,_,_],Q),
 	writeln("S is in Q").
-<<<<<<< HEAD
 
-affiche_solution(_,_,[]).
-affiche_solution(U,Q,[[U,Move]|T]):-
-	writeln("Mouvement :"),
-	write(Move),
-	write(", Etat :"),
-	write(U),
-	affiche_solution(U,Q,T).
-
-get_solution(Empty, _, []) :- empty(Empty).
-get_solution(U, Q, [[U,Move] | T]) :-
+get_solution(nil,_,[]).
+get_solution(U,Q,[[U,Move]|T]):-
 	belongs([U, _, _, _], Q),
-	suppress([U, _, Ancetre, Move], Q, Q2).
+	suppress([U, _, Ancetre, Move], Q, Q2),
+	get_solution(Ancetre,Q2,T).
 
 reverse([],L,L).
 reverse([H|T],L,Acc) :- reverse(T,L,[H|Acc]).
-=======
->>>>>>> fff4ea2823c8ef8dd8cfcba9d1753f0f00671f9b
+
+affiche_solution([]).
+affiche_solution([[U,Move]|T]):-
+	write("Mouvement : "),
+	write(Move),
+	write(", Etat : "),
+	writeln(U),
+	affiche_solution(T).
