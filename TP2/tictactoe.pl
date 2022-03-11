@@ -8,9 +8,9 @@
 
 	Contrairement a la convention du tp precedent, pour modeliser une case libre
 	dans une matrice on n'utilise pas une constante speciale (ex : nil, 'vide', 'libre','inoccupee' ...);
-	On utilise plutôt un identificateur de variable, qui n'est pas unifiee (ex : X, A, ... ou _) .
+	On utilise plutï¿½t un identificateur de variable, qui n'est pas unifiee (ex : X, A, ... ou _) .
 	La situation initiale est une "matrice" 3x3 (liste de 3 listes de 3 termes chacune)
-	où chaque terme est une variable libre.	
+	oï¿½ chaque terme est une variable libre.	
 	Chaque coup d'un des 2 joureurs consiste a donner une valeur (symbole x ou o) a une case libre de la grille
 	et non a deplacer des symboles deja presents sur la grille.		
 	
@@ -44,7 +44,8 @@ adversaire(o,x).
 	 continuer a jouer (quel qu'il soit).
 	 ****************************************************/
 
-% situation_terminale(_Joueur, Situation) :-   ? ? ? ? ?
+situation_terminale(_Joueur, Situation) :- ground(Situation).
+
 
 	/***************************
 	DEFINITIONS D'UN ALIGNEMENT
@@ -59,9 +60,14 @@ alignement(D, Matrix) :- diagonale(D,Matrix).
  	 existant dans une matrice carree NxN.
 	 ********************************************/
 	
-% ligne(L, M) :-  ? ? ? ?
+ligne(L, M) :- nth1(_,M,L).
  
-% colonne(C,M) :- ? ? ? ?
+colonne(C,M) :- colonne(_,C,M).
+colonne(K,[],[]).
+colonne(K,[E|C],[Ligne|M]) :- 
+	nth1(K,Ligne,E),
+	colonne(K,C,M).
+
 
 	/* Definition de la relation liant une diagonale D a la matrice M dans laquelle elle se trouve.
 		il y en a 2 sortes de diagonales dans une matrice carree(https://fr.wikipedia.org/wiki/Diagonale) :
@@ -78,12 +84,10 @@ alignement(D, Matrix) :- diagonale(D,Matrix).
 		R . . . . . . . I
 	*/
 		
-diagonale(D, M) :- 
-	premiere_diag(1,D,M).
+diagonale(D, M) :- premiere_diag(1,D,M).
 
-	% deuxieme definition A COMPLETER
 
-% diagonale(D, M) :- ? ? ? ?
+diagonale(D, M) :- seconde_diag(3,D,M).
 
 	
 premiere_diag(_,[],[]).
@@ -92,8 +96,11 @@ premiere_diag(K,[E|D],[Ligne|M]) :-
 	K1 is K+1,
 	premiere_diag(K1,D,M).
 
-% seconde_diag(K,M,D) :- ? ? ? ?
-
+seconde_diag(_,[],[]).
+seconde_diag(K,[E|D],[Ligne|M]) :- 
+	nth1(K,Ligne,E),
+	K1 is K-1,
+	seconde_diag(K1,D,M).
 
 	/*****************************
 	 DEFINITION D'UN ALIGNEMENT 
@@ -103,15 +110,20 @@ premiere_diag(K,[E|D],[Ligne|M]) :-
 possible([X|L], J) :- unifiable(X,J), possible(L,J).
 possible(  [],  _).
 
+%:- possible([x,o,_],x).
+
 	/* Attention 
 	il faut juste verifier le caractere unifiable
 	de chaque emplacement de la liste, mais il ne
 	faut pas realiser l'unification.
 	*/
 
-% A FAIRE 
-% unifiable(X,J) :- ? ? ? ? ?
-	
+unifiable(X,_) :- var(X).
+unifiable(X,X).
+
+:- unifiable(X, o), var(X).
+:- unifiable(o, o).
+:- \+ unifiable(x, o).	
 	/**********************************
 	 DEFINITION D'UN ALIGNEMENT GAGNANT
 	 OU PERDANT POUR UN JOUEUR DONNE J
@@ -139,10 +151,22 @@ possible pour J qui n'a aucun element encore libre.
 
 % A FAIRE
 
-% alignement_gagnant(Ali, J) :- ? ? ? ?
+alignement_gagnant([],_).
+alignement_gagnant([H|T], J) :- 
+	ground(H),
+	H=J,
+	alignement_gagnant(T,J).
 
-% alignement_perdant(Ali, J) :- ? ? ? ?
+alignement_perdant(Ali, J) :- 
+	adversaire(J,C),
+	alignement_gagnant(Ali,C).
 
+:- alignement_gagnant([x,x,x],x).
+:- \+ alignement_gagnant([x,x,_],x).
+:- \+ alignement_gagnant([x,x,o],x).
+:- alignement_perdant([o,o,o],x).
+:- \+ alignement_perdant([o,o,_],x).
+:- \+ alignement_perdant([o,o,x],x).
 
 	/* ****************************
 	DEFINITION D'UN ETAT SUCCESSEUR
@@ -154,8 +178,15 @@ possible pour J qui n'a aucun element encore libre.
 	lorsqu'un joueur J joue en coordonnees [L,C]
 	*/	
 
-% A FAIRE
-% successeur(J, Etat,[L,C]) :- ? ? ? ?  
+
+successeur(J, Etat,[L,C]) :-
+	nth1(L,Etat,Lig), 
+	nth1(C,Lig,X),
+	var(X),
+	X=J.
+
+:- \+ successeur(o,[[x,x],[x,x]],[2,2]).
+:- successeur(o,[[x,x],[x,_]],[2,2]).
 
 	/**************************************
    	 EVALUATION HEURISTIQUE D'UNE SITUATION
@@ -186,6 +217,14 @@ heuristique(J,Situation,H) :-		% cas 2
 % c-a-d si Situation n'est ni perdante ni gagnante.
 
 % A FAIRE 					cas 3
-% heuristique(J,Situation,H) :- ? ? ? ?
-
-
+heuristique(J,Situation,H) :- 
+	findall(X,(alignement(X,Situation),possible(Situation,J)),Liste_possible),
+	length(Liste_possible,H1),
+	write("H1 = "),
+	writeln(H1),
+	adversaire(J,C),
+	findall(X,(alignement(X,Situation),possible(Situation,C)),Liste_possible),
+	length(Liste_possible,H2),
+	write("H2 = "),
+	writeln(H2),
+	H is (H1-H2).
