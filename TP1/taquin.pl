@@ -49,7 +49,7 @@ initial_state([ [ a, b, c],
 initial_state([ [b, c, d],
                 [a,vide,g],
                 [f, h, e]  ]). % h2=10 f*=10
-			
+		
 initial_state([ [f, g, a],
                 [h,vide,b],
                 [d, c, e]  ]). % h2=16, f*=20

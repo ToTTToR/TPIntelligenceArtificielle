@@ -73,13 +73,6 @@ aetoile(Empty,Empty,_) :-
 	empty(Empty),
 	writeln("Pas de solution : l'état final n'est pas ateignable.").
 
-aetoile(Pf, _, _) :-
-	suppress_min([_,F],Pf,_),
-	final_state(F),
-	!,
-	writeln(F),
-	writeln("On a trouvé la solution!!!!! Youpi!!!!").
-
 aetoile(Pf,Pu,Qs) :-
 	suppress_min([[_,_,G],U],Pf,Pf2),
 	suppress([U,Info,Pere,A],Pu,Pu2),
@@ -87,33 +80,70 @@ aetoile(Pf,Pu,Qs) :-
 	findall([U2,Cost,Move],rule(Move,Cost,U,U2),List_successors),
 	writeln(List_successors),
 	expand(U,List_successors,G,[Qs,Q2],[Pf2,Pf3],[Pu2,Pu3]),
+	writeln("expand over"),
 	insert([U,Info,Pere,A],Q2,Q3),
 	aetoile(Pf3,Pu3,Q3).
 
-expand(_,[],_,_,_).
+aetoile(Pf,_,Qs) :-
+	final_state(F),
+	suppress_min([_,F],Pf,_),
+	writeln("On a trouvé la solution!!!!! Youpi!!!!"),
+	get_solution(F,Qs,L),
+	reverse(L,Sol,[]),
+	affiche_solution(Sol),
+	!.
+
+expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]) :- writeln("Fin de la liste de successeurs.").
 
 expand(Ancetre,[[U,Cost,Move]|T],G,[Q,Q3],[Pf,Pf3],[Pu,Pu3]) :-
 	heuristique(U,H),
 	G2 is (Cost + G),
 	F is (H+G2),
+	writeln(""),
+	writeln("Accès à un successeur"),
 	loop_successors(Ancetre,[U,Cost,Move],[Q,Q2],[Pf,Pf2],[Pu,Pu2],[F,G2,H]),
+	writeln("expanding"),
 	expand(Ancetre,T,G,[Q2,Q3],[Pf2,Pf3],[Pu2,Pu3]).
 
-
-loop_successors(_,_,[Q,_],_,_,_) :- suppress([U,_,_,_],Q,_).
-
-loop_successors(_,_,_,_,[Pu,Pu3],[F1,_,_]) :-
+loop_successors(_,[U|_],[Q,Q],[Pf,Pf],[Pu,Pu3],[F1,_,_]) :-
 	suppress([U,[F2,H2,G2],Pere,A],Pu,Pu2),
 	compare(>,F1,F2),
-	insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3).
+	writeln("S est connu dans Pu, mais S à une évaluation moins bonne."),
+	insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3),
+	write("Renvoie : "),
+	writeln(Pu3).
 
-loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 	suppress([U,[F2,H2,G2],_,_],Pu,Pu2),
 	compare(>,F2,F1),
+	writeln("S est connu dans Pu, et S a une évaluation meilleure."),
 	suppress([[F2,H2,G2],U],Pf,Pf2),
 	insert([[F1,H1,G1],U],Pf2,Pf3),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu2,Pu3).
 
-loop_successors(Ancetre,[U,_,Move],_,[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
+	writeln("S est une situation nouvelle."),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu,Pu3),
-	insert([[F1,H1,G1],U],Pf,Pf3).
+	insert([[F1,H1,G1],U],Pf,Pf3),
+	writeln(Pu3).
+
+loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :-
+	belongs([U,_,_,_],Q),
+	writeln("S is in Q").
+
+get_solution(nil,_,[]).
+get_solution(U,Q,[[U,Move]|T]):-
+	belongs([U, _, _, _], Q),
+	suppress([U, _, Ancetre, Move], Q, Q2),
+	get_solution(Ancetre,Q2,T).
+
+reverse([],L,L).
+reverse([H|T],L,Acc) :- reverse(T,L,[H|Acc]).
+
+affiche_solution([]).
+affiche_solution([[U,Move]|T]):-
+	write("Mouvement : "),
+	write(Move),
+	write(", Etat : "),
+	writeln(U),
+	affiche_solution(T).

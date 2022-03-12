@@ -1,0 +1,7 @@
+1.2 1ére requete : situation initiale du jeu, rien n'est encore mis, et joueur qui commence à jouer.
+    2eme requete : un joueur joue un coup sur la ligne 3, colonne 2.
+2.2
+
+tests unitaires : 
+
+3.2 
