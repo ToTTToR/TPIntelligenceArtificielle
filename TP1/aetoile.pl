@@ -85,6 +85,7 @@ aetoile(Pf,Pu,Qs) :-
 	suppress([U,Info,Pere,A],Pu,Pu2),
 	writeln(U),
 	findall([U2,Cost,Move],rule(Move,Cost,U,U2),List_successors),
+	writeln(List_successors),
 	expand(U,List_successors,G,[Qs,Q2],[Pf2,Pf3],[Pu2,Pu3]),
 	insert([U,Info,Pere,A],Q2,Q3),
 	aetoile(Pf3,Pu3,Q3).
