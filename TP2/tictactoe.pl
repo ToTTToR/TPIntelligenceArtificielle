@@ -63,7 +63,7 @@ alignement(D, Matrix) :- diagonale(D,Matrix).
 ligne(L, M) :- nth1(_,M,L).
  
 colonne(C,M) :- colonne(_,C,M).
-colonne(K,[],[]).
+colonne(_,[],[]).
 colonne(K,[E|C],[Ligne|M]) :- 
 	nth1(K,Ligne,E),
 	colonne(K,C,M).
