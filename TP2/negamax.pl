@@ -65,16 +65,15 @@ negamax(J,Etat,P,P,[_,Val]) :-
 	!.
 
 /*Grille pleine, plus de coups possibles à jouer*/
-negamax(J,Etat,_,_,_) :-
-	writeln("Egalite."),
+negamax(J,Etat,_,_,[_,Val]) :-
 	situation_terminale(J,Etat),
+	heuristique(J,Etat,Val),
 	!.
 
 /*Situation "normale"*/
 negamax(J,Etat,P,Pmax,[Coup,Val]) :-
 	successeurs(J,Etat,Liste_successeur),
 	loop_negamax(J,P,Pmax,Liste_successeur,Liste_coups),
-	writeln(Liste_coups),
 	meilleur(Liste_coups,[Coup,Val2]),
 	Val is -Val2.
 
