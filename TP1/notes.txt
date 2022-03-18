@@ -11,6 +11,10 @@
 
 
 
+Rubiks'cube : 
+- tableau de 4 matrices 3x3 pour les côtés 
+- tableau de 2 matrices 3x3 pour le haut et le bas
+
 
 Tests unitaire :
     -Manhattan : initial_state(Ini),manhattan(h,Ini,H).
