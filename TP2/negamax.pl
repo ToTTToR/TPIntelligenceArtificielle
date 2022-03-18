@@ -56,10 +56,22 @@
 A FAIRE : ECRIRE ici les clauses de negamax/5
 .....................................
 	*/
+/*Profondeur PMax atteint */
+negamax(_,_,P,P,_) :- writeln("Profondeur max atteint, plus de coups possible Ã  jouer.").
+
+/*Grille pleine, plus de coups possibles Ã  jouer*/
+negamax(J,Etat,_,_,_) :-
+	writeln("Grille est remplie, on ne peut plus jouer."),
+	situation_terminale(J,Etat).
+
+/*Situation "normale"*/
+negamax(J,Etat,P,PMax,[Coup,Val]) :-
+	successeurs(J,Etat,Liste_successeur),
+	loop_negamax(J,P,Pmax,Liste_successeur,Liste_coups),
 
 
 	/*******************************************
-	 DEVELOPPEMENT D'UNE SITUATION NON TERMINALE
+	 DEVELOPPEMENT D''UNE SITUATION NON TERMINALE
 	 successeurs/3 
 	 *******************************************/
 
@@ -118,7 +130,8 @@ A FAIRE : commenter chaque litteral de la 2eme clause de loop_negamax/5,
 
 A FAIRE : ECRIRE ici les clauses de meilleur/2
 	*/
-
+meilleur() :- 
+	
 
 
 	/******************
@@ -132,8 +145,8 @@ main(B,V, Pmax) :-
 
 	/*
 A FAIRE :
-	Compléter puis tester le programme principal pour plusieurs valeurs de la profondeur maximale.
+	Complï¿½ter puis tester le programme principal pour plusieurs valeurs de la profondeur maximale.
 	Pmax = 1, 2, 3, 4 ...
-	Commentez les résultats obtenus.
+	Commentez les rï¿½sultats obtenus.
 	*/
 

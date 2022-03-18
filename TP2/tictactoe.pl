@@ -224,3 +224,9 @@ heuristique(J,Situation,H) :-
 	findall(X,(alignement(X,Situation),possible(X,C),alignement_gagnant(X,C)),Liste_possible2),
 	length(Liste_possible2,H2),
 	H is (H1-H2).
+
+:- S=[[_,_],[_,_]],heuristique(o,S,0).
+:- S=[[x,_],[_,_]],heuristique(x,S,3).
+:- S=[[_,_,x],[_,o,_],[o,_,_]],heuristique(o,S,3).
+:- S=[[x,x,x],[o,_,_],[o,_,_]],heuristique(x,S,10000).
+:- S=[[o,o,o],[x,_,_],[x,_,_]],heuristique(x,S,-10000).
