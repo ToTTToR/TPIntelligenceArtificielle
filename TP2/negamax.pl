@@ -113,6 +113,21 @@ loop_negamax(J,P,Pmax,[[Coup,Suiv]|Succ],[[Coup,Vsuiv]|Reste_Couples]) :-
 A FAIRE : commenter chaque litteral de la 2eme clause de loop_negamax/5,
 	en particulier la forme du terme [_,Vsuiv] dans le dernier
 	litteral ?
+
+- J : joueur actuel
+- P : profondeur actuelle
+- Pmax : profondeur max possible
+- [Coup,Suiv] : couple représentant un noeud de l'arbre (le coup et coût correspondant)
+- [[Coup,Suiv]|Succ] : permet d'itérer sur la liste de noeud d'une branche choisi
+- [[Coup,Vsuiv]|Reste_Couples] : même fonctionnement que ci-dessus mais on remonte les noeuds (dans Reste_Couples) au lieu de les faire descendre
+
+loop_negamax(J,P,Pmax,Succ,Reste_Couples) : pour la récursivité, on descend avec les noeuds restants et on remonte les resultats
+adversaire(J,A) : quand un joueur joue un coup c'est ensuite à l'autre joueur de jouer, on inverse donc le joueur J ici devient A pour adversaire
+Pnew représente la nouvelle profondeur (P+1), on est en effet un cran plus bas
+negamax(A,Suiv,Pnew,Pmax, [_,Vsuiv]) : on regarde les coups que peut jouer l'adversaire et update l'arbre en fonction.
+[_,Vsuiv] : représente le couple du noeud minimum que l'on va choisir ensuite
+
+
 	*/
 
 	/*********************************
