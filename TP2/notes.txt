@@ -14,8 +14,8 @@ Profondeur : 4, gain : 1
 Profondeur : 5, gain : 3
 Profondeur : 6, gain : 1
 Profondeur : 7, gain : 2
-Profondeur : 8, gain : 10000 (coups 3,3!)
-Profondeur : 9, gain : Error, out of global stack (logique). 
+Profondeur : 8, gain : 0 (coups 3,3!)
+Profondeur : 9, gain : 0 (coups 3 3!). 
 
 4.2 Pour chaque situation, on regarde si elle est déjà présente dans l'arbre symétriquement,
 si c'est le cas, on élague cette branche et toute celle qui en découle.

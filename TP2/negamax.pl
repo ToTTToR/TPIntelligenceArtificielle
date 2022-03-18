@@ -59,15 +59,22 @@ A FAIRE : ECRIRE ici les clauses de negamax/5
 /*Profondeur PMax atteint */
 negamax(J,Etat,P,P,[_,Val]) :- 
 	heuristique(J,Etat,Val),
-	/*write(Coup),
-	write(", "),
-	writeln(Val),*/
 	!.
 
 /*Grille pleine, plus de coups possibles à jouer*/
 negamax(J,Etat,_,_,[_,Val]) :-
 	situation_terminale(J,Etat),
 	heuristique(J,Etat,Val),
+	!.
+
+/*Situation gagnante*/
+negamax(J,Etat,_,_,[_,10000]) :-
+	heuristique(J,Etat,10000),
+	!.
+
+/*Situation perdante*/
+negamax(J,Etat,_,_,[_,-10000]) :-
+	heuristique(J,Etat,-10000),
 	!.
 
 /*Situation "normale"*/

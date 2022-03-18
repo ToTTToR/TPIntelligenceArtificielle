@@ -8,7 +8,9 @@
 
 2. Développement des 2 heuristiques.
 
-
+3.3 Analyse expérimentale
+Heuristique n°1 -> 22 ms.
+Heuristique n°2 -> 16 ms.
 
 
 

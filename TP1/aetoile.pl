@@ -63,7 +63,14 @@ main :-
 	avl1(Pf),
 	avl2(Pu),
 	empty(Q),
-	aetoile(Pf,Pu,Q).
+	statistics(walltime, [TimeSinceStart | [TimeSinceLastCall]]),
+	aetoile(Pf,Pu,Q),
+   	statistics(walltime, [NewTimeSinceStart | [ExecutionTime]]),
+   	write('Execution took '), 
+	write(ExecutionTime), 
+	write(' ms.'), 
+	nl.
+
 
 
 
