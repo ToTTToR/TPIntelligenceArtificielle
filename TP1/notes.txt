@@ -18,4 +18,7 @@ Tests unitaire :
     -malplace : initial_state(Ini),final_state(Final),malplace(X,Ini,Final).
     -coordonnees : initial_state(Ini),coordonnees(a,Ini,L,C).
     -heuristique2 : initial_state(Ini),heuristique2(Ini,H).
+    
+    
+    sûr de ça : ??
     -aetoile qui a trouvé solution : empty(Empty),insert([[H,0,H],F],Empty,Avl),final_state(F),aetoile(Avl,_,_).
