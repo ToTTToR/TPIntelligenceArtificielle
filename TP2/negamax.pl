@@ -65,9 +65,11 @@ negamax(J,Etat,_,_,_) :-
 	situation_terminale(J,Etat).
 
 /*Situation "normale"*/
-negamax(J,Etat,P,PMax,[Coup,Val]) :-
+negamax(J,Etat,P,Pmax,[Coup,Val]) :-
 	successeurs(J,Etat,Liste_successeur),
 	loop_negamax(J,P,Pmax,Liste_successeur,Liste_coups),
+	meilleur(Liste_coups,[Coup,Val2]),
+	Val is (-Val2).
 
 
 	/*******************************************
@@ -130,17 +132,27 @@ A FAIRE : commenter chaque litteral de la 2eme clause de loop_negamax/5,
 
 A FAIRE : ECRIRE ici les clauses de meilleur/2
 	*/
-meilleur() :- 
-	
 
+meilleur([Couple],Couple).
 
+meilleur([[Coup,V_situation_suivante]|T],[Coup,V_situation_suivante]) :- 
+	meilleur(T,[_,V_situation_suivante2]),
+	compare(<,V_situation_suivante,V_situation_suivante2),
+	!.
+
+meilleur([_|T],[Coup2,V_situation_suivante2]) :- 
+	meilleur(T,[Coup2,V_situation_suivante2]),
+	!.
+
+:- meilleur([[_,2],[_,6],[_,5]],[_,2]).
+:- meilleur([[_,9],[_,2],[_,3]],[_,2]).
+:- meilleur([[_,8],[_,2],[_,1]],[_,1]).
 	/******************
   	PROGRAMME PRINCIPAL
   	*******************/
 
 main(B,V, Pmax) :-
-
-	true.        
+	negamax(J,Etat,P,PMax,[Coup,Val]).
 
 
 	/*
