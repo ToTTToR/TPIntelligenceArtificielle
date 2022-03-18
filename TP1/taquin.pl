@@ -235,5 +235,4 @@ manhattan(P,U,M) :-
 heuristique2(U, H) :- 
    findall(M,manhattan(P,U,M),List2),
    sumlist(List2,H).
-									
-									
+								

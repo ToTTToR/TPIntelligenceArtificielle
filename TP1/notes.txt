@@ -13,6 +13,10 @@ Heuristique n°1 -> 22 ms.
 Heuristique n°2 -> 16 ms.
 
 
+Rubiks'cube : 
+- tableau de 4 matrices 3x3 pour les côtés 
+- tableau de 2 matrices 3x3 pour le haut et le bas
+
 
 Tests unitaire :
     -Manhattan : initial_state(Ini),manhattan(h,Ini,H).
@@ -20,4 +24,7 @@ Tests unitaire :
     -malplace : initial_state(Ini),final_state(Final),malplace(X,Ini,Final).
     -coordonnees : initial_state(Ini),coordonnees(a,Ini,L,C).
     -heuristique2 : initial_state(Ini),heuristique2(Ini,H).
+    
+    
+    sûr de ça : ??
     -aetoile qui a trouvé solution : empty(Empty),insert([[H,0,H],F],Empty,Avl),final_state(F),aetoile(Avl,_,_).
