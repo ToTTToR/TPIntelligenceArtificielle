@@ -4,4 +4,4 @@
 
 tests unitaires : 
 
-3.2 
+3.2 le prédicat successeurs permet de connaitre sous forme de liste l'ensemble de couple suivant le tour d'un joueur
