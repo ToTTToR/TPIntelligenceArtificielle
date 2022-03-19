@@ -49,11 +49,11 @@ initial_state([ [ a, b, c],
 initial_state([ [b, c, d],
                 [a,vide,g],
                 [f, h, e]  ]). % h2=10 f*=10
-		
+
 initial_state([ [f, g, a],
                 [h,vide,b],
                 [d, c, e]  ]). % h2=16, f*=20
-			
+
 initial_state([ [e, f, g],
                 [d,vide,h],
                 [c, b, a]  ]). % h2=24, f*=30 
@@ -61,7 +61,7 @@ initial_state([ [e, f, g],
 initial_state([ [a, b, c],
                 [g,vide,d],
                 [h, f, e]]). % etat non connexe avec l'etat final (PAS DE SOLUTION)
-*/  
+*/
 
 
    %******************
@@ -167,9 +167,11 @@ delete(N,X,[Y|L], [Y|R]) :-
 	*/
 
 	
-	coordonnees([L,C], Mat, Elt) :- true.    %********
-											 % A FAIRE
-											 %********
+coordonnees([Lig,Col],Etat,Piece ) :-
+   nth1(Lig,Etat,L), 
+   nth1(Col,L, Piece).
+
+:- coordonnees([2,2],[[a,b,c],[d,e,f]],  e).
 
 											 
    %*************
@@ -178,7 +180,7 @@ delete(N,X,[Y|L], [Y|R]) :-
    
 heuristique(U,H) :-
     heuristique1(U, H).  % au debut on utilise l'heuristique 1 
-%   heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
+%     heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
    
    
 %****************
@@ -198,13 +200,9 @@ heuristique(U,H) :-
    % Definir enfin l'heuristique qui détermine toutes les pièces mal placées (voir prédicat findall) 
 % et les compte (voir prédicat length)
 
-coordonnees(Piece, Etat, Lig, Col) :-
-   nth1(Lig,Etat,L), 
-   nth1(Col,L, Piece).
-
 malplace(P,U,F) :-
-   coordonnees(P,U,L,C),
-   coordonnees(Q,F,L,C),
+   coordonnees([L,C],U,P),
+   coordonnees([L,C],F,Q),
    P \= Q,
    P \= vide.
 
@@ -227,8 +225,8 @@ sumlist([],0).
 
 manhattan(P,U,M) :-
    final_state(F),
-   coordonnees(P,U,L1,C1),
-   coordonnees(P,F,L2,C2),
+   coordonnees([L1,C1],U,P),
+   coordonnees([L2,C2],F,P),
    P \= vide,
    M is (abs(L1-L2) + abs(C1-C2)).
 
