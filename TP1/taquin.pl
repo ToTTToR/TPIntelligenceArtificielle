@@ -1,28 +1,3 @@
-/* Fichier du probleme. 
-
-Doit contenir au moins 4 predicats qui seront utilises par A*
-
-   etat_initial(I)                                         % definit l'etat initial
-
-   etat_final(F)                                           % definit l'etat final  
-
-   rule(Rule_Name, Rule_Cost, Before_State, After_State)   % règles applicables
-
-   heuristique(Current_State, Hval)				           % calcul de l'heuristique 
-
-
-Les autres prédicats sont spécifiques au Taquin.
-*/
-
-
-%:- lib(listut).      % Laisser cette directive en commentaire si vous utilisez Swi-Prolog 
-   
-                      % Sinon décommentez la ligne si vous utilisez ECLiPSe Prolog :
-                      % -> permet de disposer du predicat nth1(N, List, E)
-                      % -> permet de disposer du predicat sumlist(List, S)
-                      % (qui sont predefinis en Swi-Prolog)
-
-                      
 %***************************
 %DESCRIPTION DU JEU DU TAKIN
 %***************************
@@ -32,11 +7,11 @@ Les autres prédicats sont spécifiques au Taquin.
    %********************   
    % format :  initial_state(+State) ou State est une matrice (liste de listes)
    
-
+/*
 initial_state([ [b, h, c],       % C'EST L'EXEMPLE PRIS EN COURS
                 [a, f, d],       % 
                 [g,vide,e] ]).   % h1=4,   h2=5,   f*=5
-
+*/
 
 
 % AUTRES EXEMPLES POUR LES TESTS DE  A*
@@ -57,11 +32,11 @@ initial_state([ [f, g, a],
 initial_state([ [e, f, g],
                 [d,vide,h],
                 [c, b, a]  ]). % h2=24, f*=30 
-
+*/
 initial_state([ [a, b, c],
                 [g,vide,d],
                 [h, f, e]]). % etat non connexe avec l'etat final (PAS DE SOLUTION)
-*/
+
 
 
    %******************
@@ -143,8 +118,6 @@ delete(N,X,[Y|L], [Y|R]) :-
    delete(N1,X,L,R),
    N is N1 + 1.
 
-   
-   
    %*******************
    % PARTIE A COMPLETER
    %*******************
@@ -154,24 +127,14 @@ delete(N,X,[Y|L], [Y|R]) :-
    %*******************************************************************
 	% format : coordonnees(?Coord, +Matrice, ?Element)
 	% Définit la relation entre des coordonnees [Ligne, Colonne] et un element de la matrice
-	/*
-	Exemples
-	
-	?- coordonnees(Coord, [[a,b,c],[d,e,f]],  e).        % quelles sont les coordonnees de e ?
-	Coord = [2,2]
-	yes
-	
-	?- coordonnees([2,3], [[a,b,c],[d,e,f]],  P).        % qui a les coordonnees [2,3] ?
-	P=f
-	yes
-	*/
-
 	
 coordonnees([Lig,Col],Etat,Piece ) :-
    nth1(Lig,Etat,L), 
    nth1(Col,L, Piece).
 
+/* Tests unitaires coordonnees */
 :- coordonnees([2,2],[[a,b,c],[d,e,f]],  e).
+:- coordonnees([2,3], [[a,b,c],[d,e,f]],  f).
 
 											 
    %*************
@@ -179,8 +142,8 @@ coordonnees([Lig,Col],Etat,Piece ) :-
    %*************
    
 heuristique(U,H) :-
-    heuristique1(U, H).  % au debut on utilise l'heuristique 1 
-%     heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
+%    heuristique1(U, H).  % au debut on utilise l'heuristique 1 
+     heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
    
    
 %****************
@@ -189,28 +152,19 @@ heuristique(U,H) :-
 % Nombre de pieces mal placees dans l'etat courant U
 % par rapport a l'etat final F
 
-
-% Suggestions : définir d'abord le prédicat coordonnees(Piece,Etat,Lig,Col) qui associe à une pièce présente dans Etat
-% ses coordonnees (Lig= numero de ligne, Col= numero de Colonne)
-
-% Definir ensuite le predicat malplace(P,U,F) qui est vrai si les coordonnes de P dans U et dans F sont differentes.
-% On peut également comparer les pieces qui se trouvent aux mêmes coordonnees dans U et dans H et voir s'il sagit de la
-% même piece.
-
-   % Definir enfin l'heuristique qui détermine toutes les pièces mal placées (voir prédicat findall) 
-% et les compte (voir prédicat length)
-
 malplace(P,U,F) :-
    coordonnees([L,C],U,P),
    coordonnees([L,C],F,Q),
    P \= Q,
    P \= vide.
 
+/* Test unitaires malplace */
+:- malplace(a,[[a,b],[c,d]],[[b,c],[d,a]]).
+:- malplace(c,[[a,b],[c,d]],[[b,c],[d,a]]).
+
 heuristique1(U, H) :- 
    findall(P,(final_state(F),malplace(P,U,F)),Liste_mal_place),
    length(Liste_mal_place,H).
-
-
 
 %****************
 %HEURISTIQUE no 2
@@ -218,10 +172,15 @@ heuristique1(U, H) :-
 
 % Somme des distances de Manhattan à parcourir par chaque piece
 % entre sa position courante et sa positon dans l'etat final
+
 sumlist([H|T],N) :- 
    sumlist(T,N1),
    N is (H+N1).
 sumlist([],0).
+
+/* Tests unitaires sumlist */
+:- sumlist([1,2,3,4],10).
+:- sumlist([10,20,30,9],69).
 
 manhattan(P,U,M) :-
    final_state(F),

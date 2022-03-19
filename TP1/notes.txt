@@ -9,8 +9,8 @@
 2. Développement des 2 heuristiques.
 
 3.3 Analyse expérimentale
-Heuristique n°1 -> 22 ms. (machine INSA) 42 ms (machine Viktor).
-Heuristique n°2 -> 16 ms.
+
+A* ne trouve pas de solution pour la dernière situation initiale proposée.
 
 
 Rubiks'cube : 

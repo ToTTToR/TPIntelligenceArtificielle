@@ -76,69 +76,61 @@ main :-
 
 %*******************************************************************************
 
+/* Les 2 arbres avl sont vides */
 aetoile(Empty,Empty,_) :- 
 	empty(Empty),
 	writeln('Pas de solution : etat final nest pas ateignable.'),
 	!.
 
+/* Solution trouvée */
 aetoile(Pf,_,Qs) :-
 	final_state(F),
 	suppress_min([_,F],Pf,_),
-	%writeln('On a trouvé la solution!!!!! Youpi!!!!'),
 	get_solution(F,Qs,L),
 	reverse(L,Sol,[]),
 	affiche_solution(Sol),
 	!.
 
+/* Cas générale */
 aetoile(Pf,Pu,Qs) :-
 	suppress_min([[_,_,G],U],Pf,Pf2),
 	suppress([U,Info,Pere,A],Pu,Pu2),
-	%writeln(U),
 	findall([U2,Cost,Move],rule(Move,Cost,U,U2),List_successors),
-	%writeln(List_successors),
 	expand(U,List_successors,G,[Qs,Q2],[Pf2,Pf3],[Pu2,Pu3]),
-	%writeln('expand over'),
 	insert([U,Info,Pere,A],Q2,Q3),
 	aetoile(Pf3,Pu3,Q3).
 
-expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]).% :- writeln('Fin de la liste de successeurs.').
+/* Plus de successeurs */
+expand(_,[],_,[Q,Q],[Pf,Pf],[Pu,Pu]).
 
+/* Opération sur successeur */
 expand(Ancetre,[[U,Cost,Move]|T],G,[Q,Q3],[Pf,Pf3],[Pu,Pu3]) :-
 	heuristique(U,H),
 	G2 is (Cost + G),
 	F is (H+G2),
-	%writeln(''),
-	%writeln('Accès à un successeur'),
 	loop_successors(Ancetre,[U,Cost,Move],[Q,Q2],[Pf,Pf2],[Pu,Pu2],[F,G2,H]),
-	%writeln('expanding'),
 	expand(Ancetre,T,G,[Q2,Q3],[Pf2,Pf3],[Pu2,Pu3]).
-	%writeln('S is in Q').
 
+/* Evaluation du successeur moins bonne que le père */
 loop_successors(_,[U|_],[Q,Q],[Pf,Pf],[Pu,Pu],[F1,_,_]) :-
 	suppress([U,[F2,H2,G2],Pere,A],Pu,_),
 	compare(>,F1,F2),
 	!.
-	%writeln('S est connu dans Pu, mais S à une évaluation moins bonne.'),
-	%insert([U,[F2,H2,G2],Pere,A],Pu2,Pu3).
-	%write('Renvoie : '),
-	%writeln(Pu3).
 
+/* Evaluation du successeur meilleure que le père */
 loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
 	suppress([U,[F2,H2,G2],_,_],Pu,Pu2),
-	%writeln('S est connu dans Pu, et S a une évaluation meilleure.'),
 	suppress([[F2,H2,G2],U],Pf,Pf2),
 	insert([[F1,H1,G1],U],Pf2,Pf3),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu2,Pu3).
 
+/* Situation nouvelle */
 loop_successors(Ancetre,[U,_,Move],[Q,Q],[Pf,Pf3],[Pu,Pu3],[F1,G1,H1]) :-
-	%writeln('S est une situation nouvelle.'),
 	insert([U,[F1,H1,G1],Ancetre,Move],Pu,Pu3),
 	insert([[F1,H1,G1],U],Pf,Pf3).
-	%writeln(Pu3).
 
-loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :-
-	%writeln("S in Q"),
-	belongs([U,_,_,_],Q).
+/* Situation connue */
+loop_successors(_,[U,_,_],[Q,Q],[Pf,Pf],[Pu,Pu],_) :- belongs([U,_,_,_],Q).
 
 get_solution(nil,_,[]).
 get_solution(U,Q,[[U,Move]|T]):-
