@@ -46,7 +46,8 @@ adversaire(o,x).
 
 situation_terminale(_Joueur, Situation) :- ground(Situation).
 
-
+:- situation_terminale(_,[[x,x],[o,x]]).
+:- \+ situation_terminale(_,[[x,x],[_,o]]).
 	/***************************
 	DEFINITIONS D'UN ALIGNEMENT
 	***************************/
@@ -55,10 +56,8 @@ alignement(L, Matrix) :- ligne(    L,Matrix).
 alignement(C, Matrix) :- colonne(  C,Matrix).
 alignement(D, Matrix) :- diagonale(D,Matrix).
 
-	/********************************************
-	 DEFINIR ICI chaque type d'alignement maximal 
- 	 existant dans une matrice carree NxN.
-	 ********************************************/
+:- alignement([x,x,x],[[x,_,o],[o,x,_],[x,o,x]]).
+:- alignement([x,x,o],[[x,_,o],[o,x,_],[x,o,x]]).
 	
 ligne(L, M) :- nth1(_,M,L).
  

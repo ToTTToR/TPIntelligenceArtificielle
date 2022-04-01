@@ -56,28 +56,28 @@
 A FAIRE : ECRIRE ici les clauses de negamax/5
 .....................................
 	*/
-/*Profondeur PMax atteint */
+/* Profondeur PMax atteint */
 negamax(J,Etat,P,P,[_,Val]) :- 
 	heuristique(J,Etat,Val),
 	!.
 
-/*Grille pleine, plus de coups possibles à jouer*/
+/* Grille pleine, plus de coups possibles à jouer */
 negamax(J,Etat,_,_,[_,Val]) :-
 	situation_terminale(J,Etat),
 	heuristique(J,Etat,Val),
 	!.
 
-/*Situation gagnante*/
+/* Situation gagnante */
 negamax(J,Etat,_,_,[_,10000]) :-
 	heuristique(J,Etat,10000),
 	!.
 
-/*Situation perdante*/
+/* Situation perdante */
 negamax(J,Etat,_,_,[_,-10000]) :-
 	heuristique(J,Etat,-10000),
 	!.
 
-/*Situation "normale"*/
+/* Situation "normale" */
 negamax(J,Etat,P,Pmax,[Coup,Val]) :-
 	successeurs(J,Etat,Liste_successeur),
 	loop_negamax(J,P,Pmax,Liste_successeur,Liste_coups),
@@ -175,6 +175,7 @@ meilleur([_|T],[Coup2,V_situation_suivante2]) :-
 :- meilleur([[_,2],[_,6],[_,5]],[_,2]).
 :- meilleur([[_,9],[_,2],[_,3]],[_,2]).
 :- meilleur([[_,8],[_,2],[_,1]],[_,1]).
+
 	/******************
   	PROGRAMME PRINCIPAL
   	*******************/
@@ -182,12 +183,3 @@ meilleur([_|T],[Coup2,V_situation_suivante2]) :-
 main(B,V, Pmax) :-
 	situation_initiale(Etat),
 	negamax(x,Etat,0,Pmax,[B,V]).
-
-
-	/*
-A FAIRE :
-	Compl�ter puis tester le programme principal pour plusieurs valeurs de la profondeur maximale.
-	Pmax = 1, 2, 3, 4 ...
-	Commentez les r�sultats obtenus.
-	*/
-
