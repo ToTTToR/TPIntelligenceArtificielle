@@ -55,9 +55,6 @@ situation_terminale(_Joueur, Situation) :- ground(Situation).
 alignement(L, Matrix) :- ligne(    L,Matrix).
 alignement(C, Matrix) :- colonne(  C,Matrix).
 alignement(D, Matrix) :- diagonale(D,Matrix).
-
-:- alignement([x,x,x],[[x,_,o],[o,x,_],[x,o,x]]).
-:- alignement([x,x,o],[[x,_,o],[o,x,_],[x,o,x]]).
 	
 ligne(L, M) :- nth1(_,M,L).
  
@@ -100,6 +97,14 @@ seconde_diag(K,[E|D],[Ligne|M]) :-
 	nth1(K,Ligne,E),
 	K1 is K-1,
 	seconde_diag(K1,D,M).
+
+/* Tests unitaires seconde diagonales */
+:- diagonale([x,o,o],[[_,_,x],[_,o,_],[o,_,_]]).
+:- \+ diagonale([x,o,o],[[_,_,x],[_,x,_],[o,_,_]]).
+
+/* Tests unitaires alignement */
+:- alignement([x,x,x],[[x,_,o],[o,x,_],[x,o,x]]).
+:- alignement([x,x,o],[[x,_,o],[o,x,_],[x,o,x]]).
 
 	/*****************************
 	 DEFINITION D'UN ALIGNEMENT 
@@ -215,7 +220,6 @@ heuristique(J,Situation,H) :-		% cas 2
 % on ne vient ici que si les cut precedents n'ont pas fonctionne,
 % c-a-d si Situation n''est ni perdante ni gagnante.
 
-% A FAIRE 					cas 3
 heuristique(J,Situation,H) :- 
 	findall(X,(alignement(X,Situation),possible(X,J),alignement_gagnant(X,J)),Liste_possible),
 	length(Liste_possible,H1),

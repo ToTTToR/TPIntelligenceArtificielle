@@ -53,7 +53,6 @@
 	- finalement le couple retourne par negamax est [Coup, V2]
 	avec : V2 is -V1 (cf. convention negamax vue en cours).
 
-A FAIRE : ECRIRE ici les clauses de negamax/5
 .....................................
 	*/
 /* Profondeur PMax atteint */
